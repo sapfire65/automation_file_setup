@@ -1,0 +1,41 @@
+import time
+import os
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+from dotenv import load_dotenv
+
+
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+
+servise = Service(executable_path=ChromeDriverManager().install())
+chrome_driver = webdriver.ChromeOptions()
+chrome_driver.add_argument("--window-size=1024,768")
+chrome_driver.add_argument("--ignore-certificate_errors")
+chrome_driver.add_argument("--incognito")
+chrome_driver.add_argument("--disable-cache")
+
+open_driver = webdriver.Chrome(service=servise, options=chrome_driver)
+
+
+# Открываем страницу
+open_driver.get('https://preview.colorlib.com/theme/bootstrap/login-form-18/')
+
+# Заполняем поле Username
+open_driver.find_element("xpath", os.environ['INPUT_LOGIN']).send_keys(os.environ['LOGIN'])
+
+# Заполняем поле Password
+open_driver.find_element("xpath", os.environ['INPUT_PASS']).send_keys(os.environ["PASS"])
+
+# Нажимаем кнопку Get Started
+open_driver.find_element("xpath", os.environ['BUTTON_SUBMIT']).click()
+time.sleep(5)
+
+
+
+
+
+
+
